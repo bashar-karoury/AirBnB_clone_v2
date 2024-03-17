@@ -1,4 +1,6 @@
-<center> <h1>HBNB - The Console</h1> </center>
+<center> <h1>HBNB - The Console V2</h1> </center>
+<center> <h2>DataBase Storage</h2> </center>
+
 
 This repository contains the second phase to build a clone of the AirBnB website. This stage implements another type of storage; database. Now the console can work with both file storage and database storage
 
