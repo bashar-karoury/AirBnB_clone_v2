@@ -64,7 +64,6 @@ class FileStorage:
         """
         if obj:
             for key, o in FileStorage.__objects.items():
-                print(o, obj)
                 if o == obj:
                     del (FileStorage.__objects)[key]
                     break
