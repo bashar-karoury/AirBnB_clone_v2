@@ -14,9 +14,9 @@ class FileStorage:
             Args:
                 cls: class whose objects' should be returned
         """
-        dic = FileStorage.__objects
+        objs = FileStorage.__objects
         if cls:
-            return {k: obj for k, obj in dic.items() if type(obj) == cls}
+            return {k: obj for k, obj in objs.items() if type(obj) == cls}
         else:
             return FileStorage.__objects
 
@@ -42,7 +42,6 @@ class FileStorage:
         from models.city import City
         from models.amenity import Amenity
         from models.review import Review
-
         classes = {
                     'BaseModel': BaseModel, 'User': User, 'Place': Place,
                     'State': State, 'City': City, 'Amenity': Amenity,
@@ -66,7 +65,7 @@ class FileStorage:
         if obj:
             for key, o in FileStorage.__objects.items():
                 if o is obj:
-                    del FileStorage.__objects[key]
+                    del (FileStorage.__objects)[key]
                 break
             del obj
             self.save()
