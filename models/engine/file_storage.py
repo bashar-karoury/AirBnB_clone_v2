@@ -68,3 +68,5 @@ class FileStorage:
                 if o is obj:
                     del FileStorage.__objects[key]
                 break
+            del obj
+            self.save()
