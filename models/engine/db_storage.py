@@ -27,10 +27,7 @@ class DBStorage:
                         host,
                         db_name), pool_pre_ping=True)
         
-        # create session
-        from sqlalchemy.orm import sessionmaker
-        self.__session = sessionmaker(bind=self.__engine)
-    
+
         # for HBNB_ENV == test, drop all tables
         if running_env == 'test':
             # Reflect existing tables from the database
@@ -46,7 +43,6 @@ class DBStorage:
             Args:
                 cls: class whose objects' should be returned
         """
-        session = self.__session()
         from models.user import User
         from models.place import Place
         from models.state import State
@@ -62,8 +58,6 @@ class DBStorage:
                     City: 'City', Amenity: 'Amenity',Review: 'Review'
                   }    
 
-        
-        san_fran = session.query(cls).all()
         if cls:
             objs_list = session.query(cls).all()
             return {"{}.{}".format(classes_names[cls], obj.id): obj for obj in objs_list}
@@ -78,40 +72,27 @@ class DBStorage:
             return objs_dict
 
     def new(self, obj):
-        """Adds new object to storage dictionary"""
-        self.all().update({obj.to_dict()['__class__'] + '.' + obj.id: obj})
+        """Adds new object to database"""
+        self.__session.add(obj)
 
     def save(self):
-        """Saves storage dictionary to file"""
-        with open(FileStorage.__file_path, 'w') as f:
-            temp = {}
-            temp.update(FileStorage.__objects)
-            for key, val in temp.items():
-                temp[key] = val.to_dict()
-            json.dump(temp, f)
+        """Commit all changes to database"""
+        self.__session.commit()
 
     def reload(self):
-        """Loads storage dictionary from file"""
-        from models.base_model import BaseModel
+        """create all tables in database and assign a session"""
         from models.user import User
         from models.place import Place
         from models.state import State
         from models.city import City
         from models.amenity import Amenity
         from models.review import Review
-        classes = {
-                    'BaseModel': BaseModel, 'User': User, 'Place': Place,
-                    'State': State, 'City': City, 'Amenity': Amenity,
-                    'Review': Review
-                  }
-        try:
-            temp = {}
-            with open(FileStorage.__file_path, 'r') as f:
-                temp = json.load(f)
-                for key, val in temp.items():
-                    self.all()[key] = classes[val['__class__']](**val)
-        except FileNotFoundError:
-            pass
+        Base.metadata.create_all(engine)
+        # create session
+        from sqlalchemy.orm import sessionmaker
+        session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        Session = scoped_session(session_factory)
+        self.__session = Session()
 
     def delete(self, obj=None):
         """ delete obj from __objects
@@ -120,9 +101,5 @@ class DBStorage:
                 obj: object to be deleted
         """
         if obj:
-            for key, o in FileStorage.__objects.items():
-                if o == obj:
-                    del (FileStorage.__objects)[key]
-                    break
-            del obj
+            self.__session.delete(obj)
             self.save()
