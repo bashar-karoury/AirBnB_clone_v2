@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 """ Review module for the HBNB project """
 from models.base_model import BaseModel, Base
-from models.place import Place
-from models.user import User
+# from models.place import Place
+# from models.user import User
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 
