@@ -43,7 +43,7 @@ class Place(BaseModel, Base):
             # filter in associated reviews with current id
             reviews_list = [v for k, v in rev_dict if v.review_id == self.id]
             return reviews_list
-"""
+
     @property
     def amenities (self):
  
