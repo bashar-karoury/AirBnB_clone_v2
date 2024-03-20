@@ -49,8 +49,8 @@ class DBStorage:
         from models.city import City
         from models.amenity import Amenity
         from models.review import Review
-        classes = {'State': State, 'City': City}
-        classes_names = {State: 'State', City: 'City'}
+        classes = {'User': User, 'State': State, 'City': City}
+        classes_names = {User: 'User', State: 'State', City: 'City'}
         """
         classes = {
                     'User': User, 'Place': Place, 'State': State,
