@@ -2,8 +2,12 @@
 """ Place Module for HBNB project """
 from models.base_model import BaseModel, Base
 from models.review import Review
-from sqlalchemy import Column, Integer, String, Float, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, Table
 from sqlalchemy.orm import relationship
+
+place_amenity = Table('place_amenity', Base.metadata,
+    Column('place_id', ForeignKey('places.id')),
+    Column('amenity_id', ForeignKey('amenities.id')))
 
 
 class Place(BaseModel, Base):
@@ -20,8 +24,8 @@ class Place(BaseModel, Base):
     latitude = Column(Float)
     longitude = Column(Float)
     reviews = relationship("Review", cascade="all, delete", backref="place")
-    # amenity_ids = []
-
+    # amenities  = relationship("Amenity", secondary=place_amenity, viewonly=False)
+    amenity_ids = []
     @property
     def reviews(self):
         """ Getter attribute for retrieving all reviews of this Place
@@ -39,3 +43,26 @@ class Place(BaseModel, Base):
             # filter in associated reviews with current id
             reviews_list = [v for k, v in rev_dict if v.review_id == self.id]
             return reviews_list
+"""
+    @property
+    def amenities (self):
+ 
+        # Get type of storage
+        storage_env = os.environ.get('HBNB_TYPE_STORAGE')
+
+        if storage_env == 'db':
+            return self.amenities
+        else:
+            # File Storage
+            # from models import storage
+            # rev_dict = all(self, Review)
+            # filter in associated reviews with current id
+            # reviews_list = [v for k, v in rev_dict if v.review_id == self.id]
+            return self.amenity_ids
+    @amenities.setter
+    def amenities(self, amen):
+         # Add ammenity to list of amenity_ids
+        
+        if type(amen) == Amenity:
+            self.amenity_ids.append(amen.id)
+    """
