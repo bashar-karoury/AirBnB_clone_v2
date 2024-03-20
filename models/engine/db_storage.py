@@ -51,11 +51,11 @@ class DBStorage:
         from models.review import Review
         classes = {
                     'User': User, 'Place': Place, 'State': State,
-                    'City': City, 'Amenity': Amenity,'Review': Review
+                    'City': City, 'Amenity': Amenity, 'Review': Review
                   }
         classes_names = {
                     User: 'User', Place: 'Place', State: 'State',
-                    City: 'City', Amenity: 'Amenity',Review: 'Review'
+                    City: 'City', Amenity: 'Amenity', Review: 'Review'
                   }
 
         if cls:
