@@ -2,6 +2,8 @@
 """This module defines a class to manage db storage for hbnb clone"""
 # import json
 import os
+from sqlalchemy import (create_engine)
+
 
 class DBStorage:
     """This class manages db storage of hbnb models"""
@@ -20,13 +22,12 @@ class DBStorage:
         running_env = os.environ.get('HBNB_ENV')
 
         # create engine
-        
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}}:3306/{}'.format(
+
+        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.format(
                         user,
                         password,
                         host,
                         db_name), pool_pre_ping=True)
-        
 
         # for HBNB_ENV == test, drop all tables
         if running_env == 'test':
@@ -35,7 +36,6 @@ class DBStorage:
             metadata.reflect()
             # Drop all tables
             metadata.drop_all()
-
 
     def all(self, cls=None):
         """Returns a dictionary of models currently in storage
@@ -49,6 +49,9 @@ class DBStorage:
         from models.city import City
         from models.amenity import Amenity
         from models.review import Review
+        classes = {'State': State, 'City': City}
+        classes_names = {State: 'State', City: 'City'}
+        """
         classes = {
                     'User': User, 'Place': Place, 'State': State,
                     'City': City, 'Amenity': Amenity,'Review': Review
@@ -56,19 +59,24 @@ class DBStorage:
         classes_names = {
                     User: 'User', Place: 'Place', State: 'State',
                     City: 'City', Amenity: 'Amenity',Review: 'Review'
-                  }    
-
+                  }
+        """
         if cls:
-            objs_list = session.query(cls).all()
-            return {"{}.{}".format(classes_names[cls], obj.id): obj for obj in objs_list}
+            objs_list = self.__session.query(cls).all()
+            new_dictionary = {"{}.{}".format(
+                        classes_names[cls], obj.id): obj for obj in objs_list}
+            return new_dictionary
         else:
             # loop through all classes and retrieve objects
             objs_dict = {}
             for class_type in classes.values():
-                objs_list = session.query(class_type).all()
+                objs_list = self.__session.query(class_type).all()
+                print("length", len(objs_list))
+
                 # traverse thru list and add to objs_dict
-                for obj in objs_list: 
-                    objs_dict.update("{}.{}".format(classes_names[class_type], obj.id) = obj)
+                for obj in objs_list:
+                    objs_dict.update({"{}.{}".format(
+                        classes_names[class_type], obj.id): obj})
             return objs_dict
 
     def new(self, obj):
@@ -87,10 +95,13 @@ class DBStorage:
         from models.city import City
         from models.amenity import Amenity
         from models.review import Review
-        Base.metadata.create_all(engine)
+        from models.base_model import Base
+        Base.metadata.create_all(self.__engine)
         # create session
         from sqlalchemy.orm import sessionmaker
-        session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        from sqlalchemy.orm import scoped_session
+        session_factory = sessionmaker(
+                        bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session()
 
