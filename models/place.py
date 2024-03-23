@@ -5,14 +5,15 @@ from models.review import Review
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Table
 from sqlalchemy.orm import relationship
 
-import os
-storage_env = os.environ.get('HBNB_TYPE_STORAGE')
-
 if storage_env == 'db':
     place_amenity = Table(
         'place_amenity', Base.metadata,
-        Column('place_id', String(60),  ForeignKey('places.id'), nullable=False),
-        Column('amenity_id', String(60), ForeignKey('amenities.id'), nullable=False)
+        Column(
+            'place_id', String(60), ForeignKey('places.id'),
+            nullable=False),
+        Column(
+            'amenity_id', String(60), ForeignKey('amenities.id'),
+            nullable=False)
         )
 
     class Place(BaseModel, Base):
@@ -29,8 +30,9 @@ if storage_env == 'db':
         price_by_night = Column(Integer, nullable=False, default=0)
         latitude = Column(Float)
         longitude = Column(Float)
-        reviews = relationship("Review", cascade="all, delete", backref="place")
-        amenities   = relationship(
+        reviews = relationship(
+            "Review", cascade="all, delete", backref="place")
+        amenities = relationship(
             "Amenity",
             secondary=place_amenity,
             viewonly=False
@@ -70,6 +72,7 @@ else:
             # filter in associated reviews with current id
             amenities_list = [v for k, v in amen_dict if v.place_id == self.id]
             return amenities_list
+
         @amenities.setter
         def amenities(self, amen):
             # Add ammenity to list of amenity_ids

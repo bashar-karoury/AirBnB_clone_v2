@@ -4,8 +4,6 @@ from models.base_model import BaseModel, Base
 from models.place import Place
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-import os
-storage_env = os.environ.get('HBNB_TYPE_STORAGE')
 
 if storage_env == 'db':
     class City(BaseModel, Base):

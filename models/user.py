@@ -14,7 +14,7 @@ if storage_env == 'db':
     class User(BaseModel, Base):
         """This class defines a user by various attributes"""
         __tablename__ = 'users'
-    
+
         first_name = Column(String(128))
         last_name = Column(String(128))
         email = Column(String(128), nullable=False)
