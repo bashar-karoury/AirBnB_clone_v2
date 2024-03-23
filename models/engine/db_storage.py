@@ -68,8 +68,6 @@ class DBStorage:
             objs_dict = {}
             for class_type in classes.values():
                 objs_list = self.__session.query(class_type).all()
-                print("length", len(objs_list))
-
                 # traverse thru list and add to objs_dict
                 for obj in objs_list:
                     objs_dict.update({"{}.{}".format(
