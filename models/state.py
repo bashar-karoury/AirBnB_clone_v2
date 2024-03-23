@@ -5,13 +5,16 @@ from models.city import City
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 import os
-
+storage_env = os.environ.get('HBNB_TYPE_STORAGE')
 
 class State(BaseModel, Base):
     """ State class """
-    __tablename__ = 'states'
-    name = Column(String(128), nullable=False)
-    cities = relationship("City", cascade="all, delete", backref="state")
+    if storage_env == 'db':    
+        __tablename__ = 'states'
+        name = Column(String(128), nullable=False)
+        cities = relationship("City", cascade="all, delete", backref="state")
+    else:
+        name = ''
 
     @property
     def cities(self):

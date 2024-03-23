@@ -30,12 +30,12 @@ class Place(BaseModel, Base):
         latitude = Column(Float)
         longitude = Column(Float)
         reviews = relationship("Review", cascade="all, delete", backref="place")
-        """amenities  = relationship(
+        amenities   = relationship(
             "Amenity",
             secondary=place_amenity,
             viewonly=False
             )
-        """
+        
     else:
         city_id = ""
         user_id = ""
@@ -67,24 +67,16 @@ class Place(BaseModel, Base):
             reviews_list = [v for k, v in rev_dict if v.place_id == self.id]
             return reviews_list
 
-    @property
-    def amenities(self):
-
-        # Get type of storage
-        storage_env = os.environ.get('HBNB_TYPE_STORAGE')
-
-        if storage_env == 'db':
-            return self.amenities
-        else:
+    if storage_env != 'db':
+        @property
+        def amenities(self):
             # File Storage
             amen_dict = all(self, Amenity)
             # filter in associated reviews with current id
             amenities_list = [v for k, v in amen_dict if v.place_id == self.id]
-            return self.amenities_list
-
-    @amenities.setter
-    def amenities(self, amen):
-        # Add ammenity to list of amenity_ids
-
-        if type(amen) == Amenity:
-            self.amenity_ids.append(amen.id)
+            return amenities_list
+        @amenities.setter
+        def amenities(self, amen):
+            # Add ammenity to list of amenity_ids
+            if type(amen) == Amenity:
+                self.amenity_ids.append(amen.id)
