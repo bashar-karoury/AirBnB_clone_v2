@@ -8,16 +8,16 @@ from sqlalchemy.orm import relationship
 import os
 storage_env = os.environ.get('HBNB_TYPE_STORAGE')
 
-place_amenity = Table(
-    'place_amenity', Base.metadata,
-    Column('place_id', String(60),  ForeignKey('places.id'), nullable=False),
-    Column('amenity_id', String(60), ForeignKey('amenities.id'), nullable=False)
-    )
+if storage_env == 'db':
+    place_amenity = Table(
+        'place_amenity', Base.metadata,
+        Column('place_id', String(60),  ForeignKey('places.id'), nullable=False),
+        Column('amenity_id', String(60), ForeignKey('amenities.id'), nullable=False)
+        )
 
+    class Place(BaseModel, Base):
+        """ A place to stay """
 
-class Place(BaseModel, Base):
-    """ A place to stay """
-    if storage_env == 'db':    
         __tablename__ = 'places'
         city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
         user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
@@ -35,8 +35,10 @@ class Place(BaseModel, Base):
             secondary=place_amenity,
             viewonly=False
             )
-        
-    else:
+
+else:
+    class Place(BaseModel):
+        """ A place to stay """
         city_id = ""
         user_id = ""
         name = ""
@@ -49,17 +51,11 @@ class Place(BaseModel, Base):
         longitude = 0.0
         amenity_ids = []
 
-    @property
-    def reviews(self):
-        """ Getter attribute for retrieving all reviews of this Place
-        in FileStorage
-        """
-        # Get type of storage
-        storage_env = os.environ.get('HBNB_TYPE_STORAGE')
-
-        if storage_env == 'db':
-            return self.reviews
-        else:
+        @property
+        def reviews(self):
+            """ Getter attribute for retrieving all reviews of this Place
+            in FileStorage
+            """
             # File Storage
             from models import storage
             rev_dict = all(self, Review)
@@ -67,7 +63,6 @@ class Place(BaseModel, Base):
             reviews_list = [v for k, v in rev_dict if v.place_id == self.id]
             return reviews_list
 
-    if storage_env != 'db':
         @property
         def amenities(self):
             # File Storage

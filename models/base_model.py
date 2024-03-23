@@ -11,7 +11,7 @@ Base = declarative_base()
 
 class BaseModel:
     """A base class for all hbnb models"""
-    if storage_env == 'db':
+    if storage_env == storage_env:
         id = Column(String(60), primary_key=True, unique=True, nullable=False)
         created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
         updated_at = Column(DateTime, nullable=False, default=datetime.utcnow)

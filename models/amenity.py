@@ -4,12 +4,16 @@ from models.base_model import BaseModel, Base
 # from models.place import Place
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-from models.place import place_amenity
+
 import os
 storage_env = os.environ.get('HBNB_TYPE_STORAGE')
 
-class Amenity(BaseModel, Base):
-    if storage_env == 'db':    
+if storage_env == 'db':
+    from models.place import place_amenity
+
+    class Amenity(BaseModel, Base):
+        """ Class to represent amenity of place
+        """
         __tablename__ = 'amenities'
         name = Column(String(128), nullable=False)
         place_amenities = relationship(
@@ -17,5 +21,8 @@ class Amenity(BaseModel, Base):
             secondary=place_amenity,
             # backref="amenities",
             viewonly=True)
-    else:
+else:
+    class Amenity(BaseModel):
+        """ Class to represent amenity of place
+        """
         name = ""

@@ -7,26 +7,23 @@ from sqlalchemy.orm import relationship
 import os
 storage_env = os.environ.get('HBNB_TYPE_STORAGE')
 
-class State(BaseModel, Base):
-    """ State class """
-    if storage_env == 'db':    
+if storage_env == 'db':
+    from models.base_model import Base
+    class State(BaseModel, Base):
+        """ State class """
         __tablename__ = 'states'
         name = Column(String(128), nullable=False)
         cities = relationship("City", cascade="all, delete", backref="state")
-    else:
+else:
+    class State(BaseModel):
+        """ State class """
         name = ''
 
-    @property
-    def cities(self):
-        """ Getter attribute for retrieving all cities of this State
-        in FileStorage
-        """
-        # Get type of storage
-        storage_env = os.environ.get('HBNB_TYPE_STORAGE')
-
-        if storage_env == 'db':
-            return self.cities
-        else:
+        @property
+        def cities(self):
+            """ Getter attribute for retrieving all cities of this State
+            in FileStorage
+            """
             # File Storage
             from models import storage
             cities_dict = all(self, City)
