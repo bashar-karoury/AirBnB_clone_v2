@@ -21,14 +21,6 @@ content="<html>
   <body>
     Holberton School
   </body>
-</html>
-ubuntu@89-web-01:~/$ curl localhost/hbnb_static/index.html
-<html>
-  <head>
-  </head>
-  <body>
-    Holberton School
-  </body>
 </html>"
 
 echo "$content" > /data/web_static/releases/test/index.html
@@ -50,17 +42,19 @@ server {
     root /data/web_static;
     location / {
         try_files \$uri \$uri/ =404;
+	add_header X-Served-By \$hostname;
     }
 
     location /hbnb_static/ {
         alias $web_static_dir/;
 	try_files \$uri \$uri/ =404;
+	add_header X-Served-By \$hostname;
     }
 }
 EOF
 
 # Test Nginx configuration
-sudo nginx -t
+sudo nginx -t > /dev/null 2>&1
 
 # Restart Nginx to apply changes
-sudo service nginx restart
+sudo service nginx restart > /dev/null 2>&1
