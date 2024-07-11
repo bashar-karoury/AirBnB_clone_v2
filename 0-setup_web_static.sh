@@ -10,11 +10,11 @@ if ! dpkg -l | grep -q "^ii  $package"; then
 fi
 
 #create /data directory if not exist
-mkdir data
-mkdir /data/web_static
-mkdir /data/web_static/releases
-mkdir /data/web_static/shared
-mkdir /data/web_static/releases/test/
+mkdir -p /data
+mkdir -p /data/web_static
+mkdir -p /data/web_static/releases
+mkdir -p /data/web_static/shared
+mkdir -p /data/web_static/releases/test/
 content="<html>
   <head>
   </head>
@@ -32,7 +32,7 @@ ubuntu@89-web-01:~/$ curl localhost/hbnb_static/index.html
 </html>"
 
 echo "$content" > /data/web_static/releases/test/index.html
-ln -sf /data/web_static/releases/test/ /data/web_static/current
+ln -sfr /data/web_static/releases/test/ /data/web_static/current
 user="ubuntu"
 group="ubuntu"
 
@@ -46,15 +46,15 @@ web_static_dir="/data/web_static/current"
 sudo tee $nginx_config > /dev/null <<EOF
 server {
     listen 80;
-    server_name $domain;
-    root /data/web_static
+    server_name static_web;
+    root /data/web_static;
     location / {
-        try $uri $uri/ =404;
+        try_files \$uri \$uri/ =404;
     }
 
     location /hbnb_static/ {
         alias $web_static_dir/;
-	try_files $uri $uri/ =404;
+	try_files \$uri \$uri/ =404;
     }
 }
 EOF
@@ -63,4 +63,4 @@ EOF
 sudo nginx -t
 
 # Restart Nginx to apply changes
-sudo systemctl restart nginx
+sudo service nginx restart
