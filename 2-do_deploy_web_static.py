@@ -6,7 +6,7 @@ from fabric.operations import run, put
 env.hosts = [
     '54.226.5.216',
     '54.87.171.248',
-    localhost
+    'localhost'
 ]
 # Set the username
 env.user = "ubuntu"
@@ -50,7 +50,7 @@ def do_deploy(archive_path):
         prev_path = "/data/web_static/releases/{}/web_static/*".format(
                 dest_path)
         next_path = "/data/web_static/releases/{}/".format(dest_path)
-        if run("mv  {} {}".format(prev_path, next_path)).failed:
+        if run("cp -r {} {}".format(prev_path, next_path)).failed:
             return False
         # Create a new the symbolic link on the web server
         if run("ln -s /data/web_static/releases/{}/ /data/web_static/current".
