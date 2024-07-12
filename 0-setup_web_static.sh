@@ -28,7 +28,7 @@ user="ubuntu"
 group="ubuntu"
 
 # Change the ownership of the directory
-sudo chown -R $user:$group /data
+# sudo chown -R $user:$group /data
 
 nginx_config="/etc/nginx/sites-available/default"
 web_static_dir="/data/web_static/current"
