@@ -8,10 +8,6 @@ if ! dpkg -l | grep -q "^ii  $package"; then
     sudo apt-get install -y $package
 fi
 
-#create /data directory if not exist
-#mkdir -p /data
-#mkdir -p /data/web_static
-mkdir -p /data/web_static/releases
 mkdir -p /data/web_static/shared
 mkdir -p /data/web_static/releases/test/
 content="<html>
@@ -28,7 +24,7 @@ user="ubuntu"
 group="ubuntu"
 
 # Change the ownership of the directory
-sudo chown -R $user:$group /data
+sudo chown -hR $user:$group /data
 
 nginx_config="/etc/nginx/sites-available/default"
 web_static_dir="/data/web_static/current"
@@ -56,4 +52,4 @@ EOF
 sudo nginx -t > /dev/null 2>&1
 
 # Restart Nginx to apply changes
-sudo service nginx restart > /dev/null 2>&1
+sudo service nginx start > /dev/null 2>&1
