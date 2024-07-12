@@ -25,6 +25,7 @@ def do_deploy(archive_path):
     else:
         # Upload the archive to the /tmp/ directory of the web server
         # fabric.operations.run("mkdir -p /tmp/versions/")
+
         archive = archive_path[9:]
         result = put(archive_path, "/tmp/{}".format(archive))
         if result.failed:
@@ -42,10 +43,16 @@ def do_deploy(archive_path):
         if run("rm -rf /tmp/{}".format(archive)).failed:
             return False
         # Delete the symbolic link /data/web_static/current from the web server
-        if run("rm  /data/web_static/current".format(archive)).failed:
+        if run("rm  -f /data/web_static/current".format(archive)).failed:
+            return False
+        # Move the location of unpacked to one level  up
+        prev_path = "/data/web_static/releases/{}/web_static/*".format(
+                dest_path)
+        next_path = "/data/web_static/releases/{}/".format(dest_path)
+        if run("mv  {} {}".format(prev_path, next_path)).failed:
             return False
         # Create a new the symbolic link on the web server
         if run("ln -s /data/web_static/releases/{}/ /data/web_static/current".
-                format(archive)).failed:
+                format(dest_path)).failed:
             return False
         return True
