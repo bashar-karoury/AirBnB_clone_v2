@@ -28,7 +28,7 @@ user="ubuntu"
 group="ubuntu"
 
 # Change the ownership of the directory
-# sudo chown -R $user:$group /data
+sudo chown -R $user:$group /data
 
 nginx_config="/etc/nginx/sites-available/default"
 web_static_dir="/data/web_static/current"
@@ -38,13 +38,13 @@ sudo tee $nginx_config > /dev/null <<EOF
 server {
     listen 80;
     server_name static_web;
-    root /data/web_static;
+    root /;
     location / {
         try_files \$uri \$uri/ =404;
 	add_header X-Served-By \$hostname;
     }
 
-    location /hbnb_static/ {
+    location /hbnb_static {
         alias $web_static_dir/;
 	try_files \$uri \$uri/ =404;
 	add_header X-Served-By \$hostname;
