@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # Shell Script to set up the server for the deployment of web_static
-
 package="nginx"
 
 # Check if the nginx is installed
@@ -10,8 +9,8 @@ if ! dpkg -l | grep -q "^ii  $package"; then
 fi
 
 #create /data directory if not exist
-mkdir -p /data
-mkdir -p /data/web_static
+#mkdir -p /data
+#mkdir -p /data/web_static
 mkdir -p /data/web_static/releases
 mkdir -p /data/web_static/shared
 mkdir -p /data/web_static/releases/test/
