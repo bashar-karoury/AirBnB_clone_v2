@@ -2,11 +2,10 @@
 """This is fabric script to deploy data to servers """
 import fabric
 from fabric.api import *
-from fabric.operations import run, put
+from fabric.operations import run, put, local
 env.hosts = [
     '54.226.5.216',
-    '54.87.171.248',
-    'localhost'
+    '54.87.171.248'
 ]
 # Set the username
 env.user = "ubuntu"
