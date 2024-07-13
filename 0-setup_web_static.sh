@@ -19,6 +19,7 @@ content="<html>
 </html>"
 
 echo "$content" > /data/web_static/releases/test/index.html
+rm -f  /data/web_static/current
 ln -sfr /data/web_static/releases/test/ /data/web_static/current
 user="ubuntu"
 group="ubuntu"
