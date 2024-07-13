@@ -53,4 +53,4 @@ EOF
 sudo nginx -t > /dev/null 2>&1
 
 # Restart Nginx to apply changes
-sudo service nginx start > /dev/null 2>&1
+sudo service nginx restart > /dev/null 2>&1
