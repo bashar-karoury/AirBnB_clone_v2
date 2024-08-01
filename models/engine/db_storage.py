@@ -109,3 +109,8 @@ class DBStorage:
         if obj:
             self.__session.delete(obj)
             self.save()
+
+    def close(self):
+        """ method to close database session
+        """
+        self.__session.remove()

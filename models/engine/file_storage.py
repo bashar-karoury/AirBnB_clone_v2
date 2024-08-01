@@ -69,3 +69,8 @@ class FileStorage:
                     break
             del obj
             self.save()
+
+    def close(self):
+        """ method for deserializing the JSON file to objects
+        """
+        self.reload()
