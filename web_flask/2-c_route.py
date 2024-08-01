@@ -17,9 +17,9 @@ def HBNB():
 
 
 @app.route('/c/<text>')
-def show_user_profile(text):
+def c_is_cool(text):
     # show the user profile for that user
-    return text.replace('_', ' ')
+    return "C {}".format(text.replace('_', ' '))
 
 
 if __name__ == "__main__":
