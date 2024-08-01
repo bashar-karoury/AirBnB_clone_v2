@@ -27,7 +27,7 @@ else:
             """
             # File Storage
             from models import storage
-            cities_dict = all(self, City)
+            cities_dict = storage.all(City)
             # filter in associated cities with current id
-            cities_list = [v for k, v in cities_dict if v.state_id == self.id]
-            return cities_list
+            res = [v for k, v in cities_dict.items() if v.state_id == self.id]
+            return res
