@@ -9,16 +9,15 @@ app = Flask(__name__)
 
 @app.route("/states_list", strict_slashes=False)
 def states_list():
-	states = storage.all(State)
-	return render_template('7-states_list.html', states_to_list=states)
-	#return "All good till now"
+    states = storage.all(State)
+    return render_template('7-states_list.html', states_to_list=states)
+
 
 @app.teardown_appcontext
 def close_session(exception=None):
-	"""close session after each request
-	"""
-	storage.close()
-
+    """close session after each request
+    """
+    storage.close()
 
 
 if __name__ == "__main__":
